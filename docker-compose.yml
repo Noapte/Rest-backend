@@ -1,0 +1,27 @@
+version: '2.1'
+services:
+  postgres:
+    restart: unless-stopped
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=doxapi
+      - POSTGRES_PASSWORD=doxapi
+      - POSTGRES_DB=doxapi
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  backend:
+    restart: unless-stopped
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      - DOXAPI_SETTINGS=Docker
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+
+volumes:
+  postgres-volume:
